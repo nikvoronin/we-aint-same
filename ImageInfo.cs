@@ -8,7 +8,7 @@ namespace WeAintSame
         public ulong Hash { get; set; }
         [JsonIgnore] public DuplicateGroup? Group;
 
-        public bool InGroup => Group is not null;
+        [JsonIgnore] public bool InGroup => Group is not null;
 
         public ImageInfo( string path, ulong hash )
         {
