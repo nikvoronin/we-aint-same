@@ -44,6 +44,22 @@ Group #1
 +++ TOTAL: 00:00:00.7362885
 ```
 
+Precalculated hashes as JSON file:
+
+```json
+[
+    {
+        "Path": "C:\\Users\\Pictures\\Samples\\Pictures\\bing20221129.jpg",
+        "Hash": 11695141823225099355
+    },
+    {
+        "Path": "C:\\Users\\Pictures\\Samples\\Pictures\\fireworks.jpg",
+        "Hash": 10721035060630703339
+    },
+    // ...
+]
+```
+
 ## Links
 
 - [ImageHash](https://github.com/coenm/ImageHash) is a .NET Standard library containing multiple algorithms to calculate perceptual hashes of images and to calculate similarity using those hashes.
