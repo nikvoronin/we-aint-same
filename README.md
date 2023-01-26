@@ -28,9 +28,9 @@ Output log:
 ....>>> mount-copy.jpg
         dup: 90,625% <> mount-rotated-2degree.jpg
 >>> mount-copy.jpg
-        dup: 100% <> mount-small.jpg
+        dup: 100% == mount-small.jpg
 >>> mount-copy.jpg
-        dup: 100% <> mountains.jpg
+        dup: 100% == mountains.jpg
 ...
 +++ Similarity: max= 100% / min= 40,625%
 
