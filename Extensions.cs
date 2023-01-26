@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using WeAintSame;
 
 namespace WeAintSame
 {
@@ -19,10 +18,12 @@ namespace WeAintSame
 
         public static void MutualDuplicateWith( this ImageInfo current, ImageInfo other )
         {
-            _ = other ?? throw new ArgumentNullException( nameof( other ) );
-            _ = current?.Group ?? throw new ArgumentNullException( nameof( current ) );
+            ArgumentNullException.ThrowIfNull( other );
+            ArgumentNullException.ThrowIfNull( current );
 
-            current.Group.AddDuplicate( other );
+            current!
+                .Group!
+                .AddDuplicate( other );
         }
 
         public static string AsString( this byte[] hash )
