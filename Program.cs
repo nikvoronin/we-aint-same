@@ -5,7 +5,7 @@ using System.Text.Json;
 using WeAintSame;
 
 const string ImageFilesMask = "*.jpg";
-const string SamplesFolderName = "Samples"; // .../User/MyPictures + Samples/*.jpg
+const string SamplesFolderName = "Samples2"; // .../User/MyPictures + Samples/*.jpg
 const double ImageSimilarityThreshold = 90.0; // percents
 
 string _samplesFolderPath =
@@ -82,7 +82,12 @@ for ( int c = 0; c < _pictures.Count; c++ ) {
             else // if ( sample.InGroup )
                 sample.MutualDuplicateWith( current );
 
-            Console.WriteLine( $">>> {Path.GetFileName( current.Path )}\n\tdup: {similarity}% <> {Path.GetFileName( sample.Path )}" );
+            string equalitySign =
+                similarity > 99.9 ? "==" 
+                : "<>";
+
+            Console.WriteLine( $">>> {
+                Path.GetFileName( current.Path )}\n\tdup: {similarity}% {equalitySign} {Path.GetFileName( sample.Path )}" );
         }
     }
 }
