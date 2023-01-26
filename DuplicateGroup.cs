@@ -36,11 +36,8 @@
 
         public static bool operator ==( DuplicateGroup left, DuplicateGroup right )
         {
-            if ( left is null ) {
-                if ( right is null ) return true;
-
-                return false;
-            }
+            if ( left is null )
+                return right is null;
 
             return left.Equals( right );
         }
