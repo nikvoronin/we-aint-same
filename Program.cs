@@ -52,7 +52,7 @@ Console.WriteLine( "\n+++ Chasing duplicates..." );
 
 var _groups = _pictures
     .GroupBy( x => x.Hash, _imageHashComparer )
-    .Select( grp => new List<ImageInfo>( grp ) )
+    .Select( grp => grp.ToList() )
     .ToList();
 
 Console.WriteLine( $"\n+++ Similarity: max= {_imageHashComparer.MaxSim}% / min= {_imageHashComparer.MinSim}%" );
