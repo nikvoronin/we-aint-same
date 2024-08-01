@@ -16,32 +16,26 @@ Output log:
 
 ```plain
 +++ Computing hashes...
-+ C:\Users\Pictures\Samples\Pictures\bing20221129.jpg
-+ C:\Users\Pictures\Samples\Pictures\fireworks.jpg
-+ C:\Users\Pictures\Samples\Pictures\mars.jpg
-+ C:\Users\Pictures\Samples\Pictures\mount-copy.jpg
-+ C:\Users\Pictures\Samples\Pictures\mount-rotated-2degree.jpg
-+ C:\Users\Pictures\Samples\Pictures\mount-small.jpg
-+ C:\Users\Pictures\Samples\Pictures\mountains.jpg
++ C:\Users\Pictures\Samples2\bing20221129.jpg
++ C:\Users\Pictures\Samples2\fireworks.jpg
++ C:\Users\Pictures\Samples2\mars.jpg
++ C:\Users\Pictures\Samples2\mount-copy.jpg
++ C:\Users\Pictures\Samples2\mount-rotated-2degree.jpg
++ C:\Users\Pictures\Samples2\mount-small.jpg
++ C:\Users\Pictures\Samples2\mountains.jpg
 
 +++ Chasing duplicates...
-....>>> mount-copy.jpg
-        dup: 90,625% <> mount-rotated-2degree.jpg
->>> mount-copy.jpg
-        dup: 100% == mount-small.jpg
->>> mount-copy.jpg
-        dup: 100% == mountains.jpg
-...
-+++ Similarity: max= 100% / min= 40,625%
+
++++ Similarity: max= 100% / min= 43,75%
 
 +++ Duplicate Groups (1):
-Group #1
+Group #0
         mount-copy.jpg
         mount-rotated-2degree.jpg
         mount-small.jpg
         mountains.jpg
 
-+++ TOTAL: 00:00:00.7362885
++++ TOTAL: 00:00:00.8170144
 ```
 
 Precalculated hashes as JSON file:
@@ -49,11 +43,11 @@ Precalculated hashes as JSON file:
 ```json
 [
     {
-        "Path": "C:\\Users\\Pictures\\Samples\\Pictures\\bing20221129.jpg",
+        "Path": "C:\\Users\\Pictures\\Samples2\\bing20221129.jpg",
         "Hash": 11695141823225099355
     },
     {
-        "Path": "C:\\Users\\Pictures\\Samples\\Pictures\\fireworks.jpg",
+        "Path": "C:\\Users\\Pictures\\Samples2\\fireworks.jpg",
         "Hash": 10721035060630703339
     },
     // ...

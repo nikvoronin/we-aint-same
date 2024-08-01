@@ -52,6 +52,7 @@ Console.WriteLine( "\n+++ Chasing duplicates..." );
 
 var _groups = _pictures
     .GroupBy( x => x.Hash, _imageHashComparer )
+    .Where(grp => grp.Count() > 1) // remove not duplicates
     .Select( grp => grp.ToList() )
     .ToList();
 
