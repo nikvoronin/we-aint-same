@@ -8,6 +8,13 @@ Let's find out duplicate images with **Perceptual Hashing** algorithms.
 - Detect duplicates.
 - Organize images into the groups of duplicates.
 
+## Performance
+
+1186 jpeg files in total. Release configuration.
+
+- 17.2 sec to pre-compute hashes.
+- 0.11 sec to search among pre-hashed images.
+
 ## Example
 
 ![samples002](https://user-images.githubusercontent.com/11328666/205454362-1e3044b4-92fb-4805-9e9b-bac5bcfb31f3.png)
