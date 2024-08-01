@@ -1,8 +1,8 @@
 ﻿using CoenM.ImageHash;
 using CoenM.ImageHash.HashAlgorithms;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using WeAintSame;
 
 const string ImageFilesMask = "*.jpg";
 const string SamplesFolderName = "Samples2"; // .../User/MyPictures + Samples/*.jpg
@@ -14,13 +14,13 @@ string _samplesFolderPath =
         SamplesFolderName );
 
 IImageHash _hashMethod = new PerceptualHash();
-List<ImageInfo> _pictures = new();
+List<ImageInfo> _pictures = [];
+var _imageHashComparer = new ImageHashComparer( ImageSimilarityThreshold );
 
-Stopwatch sw = new();
-sw.Start();
+var sw = Stopwatch.StartNew();
 
 var precomputedHashesFileName = PrecomputedHashesFileName();
-if ( File.Exists( precomputedHashesFileName ) ) {
+if (File.Exists( precomputedHashesFileName )) {
     Console.WriteLine( "\n+++ Restoring hashes..." );
 
     using var fs = File.OpenRead( precomputedHashesFileName );
@@ -34,7 +34,7 @@ else {
             _samplesFolderPath, ImageFilesMask,
             SearchOption.AllDirectories );
 
-    foreach ( var picturePath in _pictureFileNames ) {
+    foreach (var picturePath in _pictureFileNames) {
         Console.WriteLine( $"+ {picturePath}" );
 
         using var stream = File.OpenRead( picturePath );
@@ -50,68 +50,34 @@ else {
 
 Console.WriteLine( "\n+++ Chasing duplicates..." );
 
-List<DuplicateGroup> _groups = new();
+var _groups = _pictures
+    .GroupBy( x => x.Hash, _imageHashComparer )
+    .Select( grp => new List<ImageInfo>( grp ) )
+    .ToList();
 
-double _maxSim = 0.0;
-double _minSim = 200.0;
-for ( int c = 0; c < _pictures.Count; c++ ) {
-    var current = _pictures[c];
-    Console.Write( "." );
-
-    for ( int s = c + 1; s < _pictures.Count; s++ ) {
-        var sample = _pictures[s];
-
-        var notSameDiscardEarly = current.InGroup && sample.InGroup;
-        if ( notSameDiscardEarly ) continue;
-
-        double similarity = CompareHash.Similarity( current.Hash, sample.Hash );
-        _maxSim = Math.Max( _maxSim, similarity );
-        _minSim = Math.Min( _minSim, similarity );
-
-        if ( similarity > ImageSimilarityThreshold ) {
-            // duplicates found
-
-            var noGroup =
-                current.Group is null
-                && sample.Group is null;
-
-            if ( noGroup )
-                _groups.CreateSameGroupForEach( current, sample );
-            else if ( current.InGroup )
-                current.MutualDuplicateWith( sample );
-            else // if ( sample.InGroup )
-                sample.MutualDuplicateWith( current );
-
-            string equalitySign =
-                similarity > 99.9 ? "==" 
-                : "<>";
-
-            Console.WriteLine( $">>> {
-                Path.GetFileName( current.Path )}\n\tdup: {similarity}% {equalitySign} {Path.GetFileName( sample.Path )}" );
-        }
-    }
-}
-
-Console.WriteLine( $"\n+++ Similarity: max= {_maxSim}% / min= {_minSim}%" );
+Console.WriteLine( $"\n+++ Similarity: max= {_imageHashComparer.MaxSim}% / min= {_imageHashComparer.MinSim}%" );
 Console.WriteLine( $"\n+++ Duplicate Groups ({_groups.Count}):" );
 
-foreach ( var g in _groups ) {
-    Console.WriteLine( $"Group #{g.Id}" );
+var groupIx = 0;
+foreach (var group in _groups) {
+    Console.WriteLine( $"Group #{groupIx}" );
 
-    foreach ( var iinfo in g.Duplicates ) {
+    foreach (var iinfo in group) {
         Console.WriteLine( $"\t{Path.GetFileName( iinfo.Path )}" );
 
         CopyToSamplesRoot(
             iinfo.Path,
-            $"{g.Id}--{Path.GetFileName( iinfo.Path )}" );
+            $"{groupIx}--{Path.GetFileName( iinfo.Path )}" );
     }
+
+    groupIx++;
 }
 
 Console.WriteLine( $"\n+++ TOTAL: {sw.Elapsed}" );
 sw.Stop();
 
-string PrecomputedHashesFileName()
-    => Path.Combine( _samplesFolderPath, $"hashs.json" );
+string PrecomputedHashesFileName() =>
+    Path.Combine( _samplesFolderPath, "hashs.json" );
 
 void CopyToSamplesRoot( string fileName, string? renameTo = null )
 {
@@ -123,4 +89,31 @@ void CopyToSamplesRoot( string fileName, string? renameTo = null )
         fileName,
         Path.Combine( _samplesFolderPath, name ),
         Overwrite );
+}
+
+file class ImageInfo( string path, ulong hash )
+{
+    public string Path { get; init; } = path;
+    public ulong Hash { get; init; } = hash;
+}
+
+file class ImageHashComparer( double threshold ) : IEqualityComparer<ulong>
+{
+    public double MinSim { get; private set; } = 200.0;
+    public double MaxSim { get; private set; }
+
+    public bool Equals( ulong x, ulong y )
+    {
+        double similarity = CompareHash.Similarity( x, y );
+
+        MaxSim = Math.Max( MaxSim, similarity );
+        MinSim = Math.Min( MinSim, similarity );
+
+        return similarity > _threshold;
+    }
+
+    // always return zero to always call Equals(x, y)
+    public int GetHashCode( [DisallowNull] ulong obj ) => 0;
+
+    private readonly double _threshold = threshold;
 }
