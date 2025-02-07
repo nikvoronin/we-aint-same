@@ -58,7 +58,7 @@ Console.WriteLine( "\n+++ Chasing duplicates..." );
 var _groups =
     pictures
     .GroupBy( x => x.Hash, imageHashComparer )
-    .Where( grp => grp.Count() > 1 ) // remove not duplicates
+    .Where( grp => grp.Count() > 1 ) // collect duplicates only i.e. remove unique images without duplicates
     .Select( grp => grp.ToList() )
     .ToList();
 
@@ -99,7 +99,7 @@ file class ImageHashComparer( double threshold ) : IEqualityComparer<ulong>
         return similarity > _threshold;
     }
 
-    // always return zero to always call Equals(x, y)
+    // always returns zero to ensure that Equals(x, y) is always called.
     public int GetHashCode( [DisallowNull] ulong obj ) => 0;
 
     private readonly double _threshold = threshold;
